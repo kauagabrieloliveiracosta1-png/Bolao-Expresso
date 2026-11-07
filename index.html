@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#071b16">
+  <meta name="description" content="Bolão Expresso — palpites, amigos e futebol.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <title>Bolão Expresso</title>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Bolão Expresso início"><span class="brand-ball">⚽</span><span>BOLÃO <b>EXPRESSO</b></span></a>
+      <div class="user-mini"><div class="avatar">BE</div><div><b>Bem-vindo!</b><small>Visitante</small></div></div>
+      <nav id="nav">
+        <button class="nav-link active" data-page="inicio">⌂ <span>Início</span></button>
+        <button class="nav-link" data-page="jogos">▣ <span>Jogos</span></button>
+        <button class="nav-link" data-page="boloes">♧ <span>Meus bolões</span></button>
+        <button class="nav-link" data-page="ranking">▤ <span>Ranking</span></button>
+        <button class="nav-link" data-page="perfil">◉ <span>Meu perfil</span></button>
+      </nav>
+      <div class="sidebar-bottom"><span class="live-dot"></span> Temporada de palpites<br><small>Versão inicial demonstrativa</small></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><span class="eyebrow">SEU FUTEBOL. SEUS PALPITES.</span><h1 id="page-title">Painel inicial</h1></div>
+        <div class="top-actions"><button class="outline-btn" id="loginBtn">Entrar</button><button class="primary-btn" id="signupBtn">Criar conta</button></div>
+      </header>
+      <section id="page-content"></section>
+      <footer>Bolão Expresso <span>•</span> Protótipo inicial — dados de demonstração</footer>
+    </main>
+  </div>
+  <dialog id="modal">
+    <form method="dialog" class="modal-card" id="modal-form">
+      <button class="modal-close" value="cancel" aria-label="Fechar">×</button>
+      <div id="modal-content"></div>
+    </form>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>

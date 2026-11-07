@@ -1,0 +1,9 @@
+{
+  "name": "Bolão Expresso",
+  "short_name": "Bolão Expresso",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#061510",
+  "theme_color": "#071b16",
+  "description": "Palpites e bolões de futebol"
+}
