@@ -1,6 +1,6 @@
 # Bolão Expresso
 
-Protótipo inicial de aplicativo web responsivo e instalável (PWA).
+Protótipo inicial de aplicativo web responsivo e instalável (PWA), com identidade visual minimalista em azul, branco e laranja.
 
 ## Como executar
 1. Extraia os arquivos.
