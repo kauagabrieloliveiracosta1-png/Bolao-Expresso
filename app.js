@@ -4,7 +4,7 @@ const SUPABASE_URL="https://osnyvlbrozozpobvfxlb.supabase.co";
 const SUPABASE_KEY="sb_publishable_hXV5OmEypXtbOyuCe-0YXg_07VThSfA";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const demo={pools:[],users:[],predictions:{},admin:false,currentUserId:null,currentProfile:null};
-let state={...demo}; let cloudReady=false; let syncing=false; let communityPredictions={};
+let state={...demo}; let cloudReady=false; let syncing=false;
 async function save(){renderAll(); if(!cloudReady||syncing)return; if(state.admin){const {error}=await db.from('app_data').upsert({id:1,data:{pools:state.pools}},{onConflict:'id'});if(error)toast('Erro ao sincronizar bolões: '+error.message)}}
 async function loadCloud(){syncing=true;try{const {data:app,error:aerr}=await db.from('app_data').select('data').eq('id',1).maybeSingle();if(aerr)throw aerr;state.pools=app?.data?.pools||[];const {data:profiles,error:perr}=await db.from('profiles').select('id,full_name,points,pools_count,role');if(perr)throw perr;state.users=(profiles||[]).map(x=>({id:x.id,name:x.full_name||'Participante',points:x.points||0,pools:x.pools_count||0,role:x.role}));const user=(await db.auth.getUser()).data.user;state.currentUserId=user?.id||null;state.currentProfile=profiles?.find(x=>x.id===user?.id)||null;if(user&&!state.currentProfile){const fullName=user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'Participante';const {data:created,error:createError}=await db.from('profiles').insert({id:user.id,full_name:fullName,role:'participant'}).select('id,full_name,points,pools_count,role').single();if(!createError&&created){state.currentProfile=created;profiles.push(created);state.users.push({id:created.id,name:created.full_name||'Participante',points:created.points||0,pools:created.pools_count||0,role:created.role});}else{state.currentProfile={id:user.id,full_name:fullName,points:0,pools_count:0,role:'participant'};state.users.push({id:user.id,name:fullName,points:0,pools:0,role:'participant'});toast('Sua conta entrou, mas o perfil ainda não foi salvo no banco. Verifique a política INSERT de profiles no Supabase.');}}state.admin=state.currentProfile?.role==='admin';state.predictions={};if(user){const {data:preds,error:prerr}=await db.from('predictions').select('pool_id,match_id,home_score,away_score,user_id');if(prerr)throw prerr;for(const x of preds||[]){state.predictions[x.pool_id]??={};state.predictions[x.pool_id][x.user_id]??={};state.predictions[x.pool_id][x.user_id][x.match_id]={hg:x.home_score,ag:x.away_score}}}cloudReady=true;syncAuthUI();renderAll()}catch(e){toast('Falha ao carregar dados: '+e.message)}finally{syncing=false}}
 
@@ -31,66 +31,37 @@ $("poolForm").onsubmit=e=>{e.preventDefault();if(!state.admin)return toast("Aç�
 function editPool(id){let p=state.pools.find(x=>x.id===id);if(!p)return;$("poolId").value=p.id;$("poolName").value=p.name;$("poolCompetition").value=p.competition;$("poolRound").value=p.round||"";$("poolDeadline").value=p.deadline||"";$("poolPrize").value=p.prize||"";$("poolScoring").value=p.scoring||"exact";$("exactPoints").value=p.exactPoints||5;$("resultPoints").value=p.resultPoints||2;$("matchEditor").innerHTML="";(p.matches||[]).forEach(addMatchRow);$("formTitle").textContent="Editar bolão";adminTab("create")}
 function setPoolStatus(id,s){if(!state.admin)return toast("Ação exclusiva do administrador.");let p=state.pools.find(x=>x.id===id);if(!p)return;p.status=s;if(s==="closed")scorePool(p);save();toast(s==="closed"?"Bolão encerrado e pontuação calculada.":"Status atualizado.")}
 function deletePool(id){if(!state.admin)return toast("Ação exclusiva do administrador.");if(!confirm("Excluir este bolão? Esta ação não pode ser desfeita."))return;state.pools=state.pools.filter(p=>p.id!==id);save()}
-async function saveResult(id,i){if(!state.admin)return toast("Ação exclusiva do administrador.");let p=state.pools.find(x=>x.id===id),m=p?.matches[i];if(!m)return;let h=$("hg-"+id+"-"+i).value,a=$("ag-"+id+"-"+i).value;if(h===""||a==="")return toast("Informe os dois placares.");m.hg=+h;m.ag=+a;m.result=true;m.status="finished";if(p.status==="closed")scorePool(p);await save();if(document.getElementById("page-community")?.classList.contains("active"))await refreshCommunityPredictions();toast("Resultado oficial salvo.")}
+function saveResult(id,i){if(!state.admin)return toast("Ação exclusiva do administrador.");let p=state.pools.find(x=>x.id===id),m=p?.matches[i];if(!m)return;let h=$("hg-"+id+"-"+i).value,a=$("ag-"+id+"-"+i).value;if(h===""||a==="")return toast("Informe os dois placares.");m.hg=+h;m.ag=+a;m.result=true;m.status="finished";if(p.status==="closed")scorePool(p);save();toast("Resultado oficial salvo.")}
 function scorePool(p){if(p.scored)return;state.users.forEach(u=>{let points=0;let preds=state.predictions[p.id]?.[u.id]||{};(p.matches||[]).forEach(m=>{let x=preds[m.id];if(!m.result||!x)return;if(+x.hg===+m.hg&&+x.ag===+m.ag)points+=p.scoring==="result"?2:(p.scoring==="custom"?p.exactPoints:5);else if((+x.hg>+x.ag&&+m.hg>+m.ag)||(+x.hg<+x.ag&&+m.hg<+m.ag)||(+x.hg===+x.ag&&+m.hg===+m.ag))points+=p.scoring==="custom"?p.resultPoints: (p.scoring==="result"?2:0)});u.points=(u.points||0)+points;u.pools=(u.pools||0)+1;db.from('profiles').update({points:u.points,pools_count:u.pools}).eq('id',u.id).then(()=>{});});p.scored=true}
 function getUser(){return state.currentProfile?{id:state.currentProfile.id,name:state.currentProfile.full_name||'Participante',points:state.currentProfile.points||0,pools:state.currentProfile.pools_count||0}:null}
-async function refreshCommunityPredictions(){
-  const root=$("communityPredictions");
-  const u=getUser();
-  if(!u){
-    root.innerHTML='<div class="panel muted">Entre na sua conta para consultar os palpites da galera.</div>';
-    return;
-  }
-  root.innerHTML='<div class="panel muted">Carregando palpites...</div>';
-  const {data:preds,error}=await db.from('predictions')
-    .select('pool_id,match_id,home_score,away_score,user_id');
-  if(error){
-    root.innerHTML='<div class="panel muted">Não foi possível carregar os palpites: '+esc(error.message)+'</div>';
-    return;
-  }
-  communityPredictions={};
-  for(const x of preds||[]){
-    communityPredictions[x.pool_id]??={};
-    communityPredictions[x.pool_id][x.user_id]??={};
-    communityPredictions[x.pool_id][x.user_id][x.match_id]={hg:x.home_score,ag:x.away_score};
-  }
-  renderCommunityPredictions();
-}
-
+async function refreshCommunityPredictions(){const u=getUser();if(!u){$("communityPredictions").innerHTML='<div class="panel muted">Entre na sua conta para consultar os palpites da galera.</div>';return}const {data:preds,error}=await db.from('predictions').select('pool_id,match_id,home_score,away_score,user_id');if(error){$("communityPredictions").innerHTML='<div class="panel muted">Não foi possível carregar os palpites: '+esc(error.message)+'</div>';return}state.predictions={};for(const x of preds||[]){state.predictions[x.pool_id]??={};state.predictions[x.pool_id][x.user_id]??={};state.predictions[x.pool_id][x.user_id][x.match_id]={hg:x.home_score,ag:x.away_score}}renderCommunityPredictions()}
 function renderCommunityPredictions(){
   const root=$("communityPredictions");
   if(!root)return;
-  const pools=state.pools.filter(p=>(p.matches||[]).length);
-  if(!pools.length){
-    root.innerHTML='<div class="panel muted">Ainda não há partidas cadastradas nos bolões.</div>';
-    return;
-  }
-  root.innerHTML=pools.map(p=>{
-    const entries=communityPredictions[p.id]||{};
+  const me=getUser();
+  if(!me){root.innerHTML='<div class="panel muted">Entre na sua conta para consultar os palpites da galera.</div>';return;}
+  const cards=state.pools.map(p=>{
+    const entries=state.predictions[p.id]||{};
     const matches=(p.matches||[]).map(m=>{
-      const released=!!m.result;
-      const picks=Object.keys(entries).map(uid=>({
-        uid,
-        user:state.users.find(x=>x.id===uid),
-        pick:entries[uid]?.[m.id]
-      })).filter(x=>x.pick && (x.uid===state.currentUserId || released || state.admin))
-       .sort((a,b)=>(a.user?.name||"Participante").localeCompare(b.user?.name||"Participante"));
-      const ownPick=picks.find(x=>x.uid===state.currentUserId);
-      const othersVisible=released||state.admin;
-      return `<div class="community-match">
-        <h3>${esc(m.home)} <span>×</span> ${esc(m.away)}</h3>
-        ${m.result?`<p class="muted small">Resultado oficial: <b>${m.hg} × ${m.ag}</b></p>`:'<p class="muted small">Resultado ainda não registrado.</p>'}
-        ${picks.length?`<div class="community-picks">${picks.map(x=>`<div class="community-pick"><span>${esc(x.user?.name||"Participante")}${x.uid===state.currentUserId?' (você)':''}</span><b>${x.pick.hg} × ${x.pick.ag}</b></div>`).join("")}</div>`:
-          (ownPick?`<div class="community-pick"><span>Seu palpite</span><b>${ownPick.pick.hg} × ${ownPick.pick.ag}</b></div>`:'<p class="muted small">Você ainda não registrou um palpite nesta partida.</p>')}
-        ${!othersVisible?'<p class="muted small">Os palpites dos outros participantes serão revelados quando o administrador registrar o resultado oficial desta partida.</p>':''}
-      </div>`;
-    }).join("");
-    return `<article class="panel community-pool">
-      <div class="panel-head"><div><span class="eyebrow">${esc(p.competition||"Bolão")}</span><h2>${esc(p.name)}</h2>
-      <p class="muted small">A liberação acontece partida por partida, após o resultado oficial.</p></div></div>
-      ${matches}
-    </article>`;
-  }).join("");
+      const released=m.result===true;
+      const picks=[];
+      Object.keys(entries).forEach(uid=>{
+        const pick=entries[uid]?.[m.id];
+        if(!pick)return;
+        if(released || uid===me.id){
+          const user=state.users.find(x=>x.id===uid);
+          picks.push({uid,name:user?.name||(uid===me.id?me.name:"Participante"),pick});
+        }
+      });
+      picks.sort((a,b)=>a.name.localeCompare(b.name));
+      return {m,released,picks};
+    });
+    const relevant=matches.filter(x=>x.released || x.picks.some(y=>y.uid===me.id));
+    if(!relevant.length)return "";
+    const visibleCount=new Set(relevant.flatMap(x=>x.picks.map(y=>y.uid))).size;
+    return `<article class="panel community-pool"><div class="panel-head"><div><span class="eyebrow">${esc(p.competition||"Bolão")}</span><h2>${esc(p.name)}</h2><p class="muted small">Os palpites de cada partida são liberados após o administrador registrar o resultado oficial.</p></div><span class="pill">${visibleCount} participantes visíveis</span></div>${relevant.map(({m,released,picks})=>`<div class="community-match"><h3>${esc(m.home)} <span>×</span> ${esc(m.away)}</h3>${released?'<p class="muted tiny">Palpites liberados — resultado oficial registrado.</p>':'<p class="muted tiny">Antes da liberação, somente você vê seu palpite.</p>'}${picks.length?`<div class="community-picks">${picks.map(x=>`<div class="community-pick"><span>${esc(x.name)}</span><b>${x.pick.hg} × ${x.pick.ag}</b></div>`).join("")}</div>`:'<p class="muted small">Nenhum palpite disponível para esta partida.</p>'}</div>`).join("")}</article>`;
+  }).filter(Boolean);
+  root.innerHTML=cards.join("")||'<div class="panel muted">Ainda não há palpites registrados para exibir. Os palpites dos demais participantes serão liberados partida por partida, depois que o resultado oficial for registrado.</div>';
 }
 
 function syncAuthUI(){const u=state.currentProfile;$("roleLabel").textContent=u?(u.full_name||'Participante'):'Visitante';$("loginBtn").style.display=u?'none':'';$("signupBtn").style.display=u?'none':'';$("logoutBtn").style.display=u?'':'none';$("roleToggle").style.display=state.admin?'':'none';}
