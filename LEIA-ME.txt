@@ -1,0 +1,6 @@
+BOLÃO EXPRESSO — MENU PRINCIPAL
+
+Abra index.html em um navegador atualizado.
+O menu navega entre Início, Jogos, Meus bolões, Ranking e Meu perfil.
+
+Este é um protótipo visual. Login, banco de dados, jogos oficiais, criação efetiva de bolões e sincronização ainda não estão conectados.

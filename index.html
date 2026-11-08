@@ -1,44 +1,23 @@
 <!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#071b16">
-  <meta name="description" content="Bolão Expresso — palpites, amigos e futebol.">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css">
-  <title>Bolão Expresso</title>
-</head>
-<body>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <a class="brand" href="#" aria-label="Bolão Expresso início"><span class="brand-ball">⚽</span><span>BOLÃO <b>EXPRESSO</b></span></a>
-      <div class="user-mini"><div class="avatar">BE</div><div><b>Bem-vindo!</b><small>Visitante</small></div></div>
-      <nav id="nav">
-        <button class="nav-link active" data-page="inicio">⌂ <span>Início</span></button>
-        <button class="nav-link" data-page="jogos">▣ <span>Jogos</span></button>
-        <button class="nav-link" data-page="boloes">♧ <span>Meus bolões</span></button>
-        <button class="nav-link" data-page="ranking">▤ <span>Ranking</span></button>
-        <button class="nav-link" data-page="perfil">◉ <span>Meu perfil</span></button>
-      </nav>
-      <div class="sidebar-bottom"><span class="live-dot"></span> Temporada de palpites<br><small>Versão inicial demonstrativa</small></div>
-    </aside>
-
-    <main class="main">
-      <header class="topbar">
-        <div><span class="eyebrow">SEU FUTEBOL. SEUS PALPITES.</span><h1 id="page-title">Painel inicial</h1></div>
-        <div class="top-actions"><button class="outline-btn" id="loginBtn">Entrar</button><button class="primary-btn" id="signupBtn">Criar conta</button></div>
-      </header>
-      <section id="page-content"></section>
-      <footer>Bolão Expresso <span>•</span> Protótipo inicial — dados de demonstração</footer>
-    </main>
-  </div>
-  <dialog id="modal">
-    <form method="dialog" class="modal-card" id="modal-form">
-      <button class="modal-close" value="cancel" aria-label="Fechar">×</button>
-      <div id="modal-content"></div>
-    </form>
-  </dialog>
-  <script src="app.js"></script>
-</body>
-</html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123b70"><title>Bolão Expresso</title>
+<style>
+:root{--navy:#123b70;--blue:#1769aa;--pale:#eaf3fb;--orange:#ff8a24;--ink:#17283d;--muted:#718096;--line:#e5ebf2;--bg:#f4f7fb}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,system-ui,sans-serif;color:var(--ink)}button{font:inherit;cursor:pointer}.app{min-height:100vh;display:grid;grid-template-columns:245px 1fr}.sidebar{background:var(--navy);color:white;padding:25px 17px;display:flex;flex-direction:column;gap:30px}.brand{display:flex;align-items:center;gap:11px;padding:0 9px}.mark{width:42px;height:42px;border-radius:13px;background:var(--orange);display:grid;place-items:center;font-size:22px}.brand b{font-size:18px}.brand small{display:block;color:#b9d0e8;font-size:10px;letter-spacing:1.5px;margin-top:4px}.navlabel{font-size:10px;color:#9bb7d4;letter-spacing:1.5px;padding:0 12px;margin-bottom:8px}.nav{display:grid;gap:6px}.nav button{border:0;background:none;color:#d9e7f5;text-align:left;padding:13px;border-radius:10px;font-weight:700}.nav button.active,.nav button:hover{background:#ffffff20;color:white;box-shadow:inset 3px 0 var(--orange)}.sidefoot{margin-top:auto;border-top:1px solid #ffffff30;padding:18px 9px 0;color:#c5d9ed;font-size:12px;line-height:1.6}.main{min-width:0}.topbar{height:72px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 34px}.muted{color:var(--muted)}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--pale);color:var(--blue);font-weight:bold}.content{max-width:1160px;margin:auto;padding:32px 34px 48px}.page{display:none}.page.active{display:block}.welcome{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px}.eyebrow{font-size:10px;letter-spacing:1.6px;color:var(--blue);font-weight:800;margin-bottom:9px}.welcome h1{font-size:35px;letter-spacing:-1px;margin:0 0 8px}.welcome p{margin:0;color:var(--muted);font-size:14px}.primary{background:var(--orange);color:white;border:0;border-radius:10px;padding:13px 17px;font-weight:800}.hero{background:linear-gradient(115deg,#123b70,#1769aa);color:white;border-radius:18px;padding:28px 30px;min-height:190px;display:flex;align-items:center;justify-content:space-between;overflow:hidden}.hero h2{font-size:28px;line-height:1.12;margin:14px 0 8px}.hero p{font-size:13px;color:#d8e9f8;line-height:1.6;margin:0}.tag{font-size:10px;letter-spacing:1px;border:1px solid #ffffff55;background:#ffffff20;border-radius:30px;padding:6px 10px}.hero .primary{margin-top:17px}.ball{font-size:105px;opacity:.2;margin-right:7%}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin:28px 0 13px}.sectionhead h3{margin:0;font-size:17px}.pill{background:var(--pale);color:var(--blue);font-size:10px;font-weight:bold;padding:6px 9px;border-radius:20px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.stat,.panel,.placeholder{background:white;border:1px solid var(--line);border-radius:14px;padding:18px}.stat label{color:var(--muted);font-size:12px}.stat strong{display:block;font-size:26px;margin:12px 0 4px}.stat small{font-size:11px;color:var(--muted)}.columns{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.match{display:grid;grid-template-columns:1fr 30px 1fr;align-items:center;gap:8px;padding:13px 0;border-bottom:1px solid var(--line)}.match:last-child{border:0}.team{font-weight:bold;font-size:12px;display:flex;align-items:center;gap:8px}.team:last-child{justify-content:flex-end}.crest{width:30px;height:30px;border-radius:9px;background:var(--pale);color:var(--blue);display:grid;place-items:center;font-size:9px}.vs{text-align:center;color:var(--muted);font-size:10px}.date{font-size:10px;color:var(--muted);margin-top:4px}.quick{padding:13px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:13px}.quick:last-child{border:0}.quick button,.link{border:0;background:none;color:var(--blue);font-weight:bold}.placeholder h2{margin:0 0 9px}.placeholder p{color:var(--muted);font-size:14px;line-height:1.6}.mobile{display:none}
+@media(max-width:820px){.app{grid-template-columns:1fr}.sidebar{display:none}.topbar{height:62px;padding:0 16px}.content{padding:24px 15px 95px}.welcome{align-items:flex-start;flex-direction:column}.welcome h1{font-size:29px}.hero{padding:23px;min-height:175px}.hero h2{font-size:24px}.ball{display:none}.columns{grid-template-columns:1fr}.mobile{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--line);padding:8px 3px calc(8px + env(safe-area-inset-bottom));z-index:5}.mobile button{border:0;background:none;color:var(--muted);font-size:9px;font-weight:bold;display:grid;justify-items:center;gap:4px}.mobile button span{font-size:18px}.mobile button.active{color:var(--blue)}}
+@media(max-width:520px){.stats{grid-template-columns:1fr}.stat{padding:14px}.topbar{padding:0 13px}}
+</style></head><body>
+<div class="app"><aside class="sidebar"><div class="brand"><div class="mark">⚽</div><div><b>Bolão Expresso</b><small>SEU PALPITE VALE</small></div></div><div><div class="navlabel">MENU PRINCIPAL</div><nav class="nav"><button class="active" data-page="inicio">⌂　 Início</button><button data-page="jogos">⚽　 Jogos</button><button data-page="boloes">▣　 Meus bolões</button><button data-page="ranking">♛　 Ranking</button><button data-page="perfil">◉　 Meu perfil</button></nav></div><div class="sidefoot">Bolão Expresso<br><b>Palpites, amigos e futebol.</b><br>Protótipo de interface</div></aside>
+<main class="main"><header class="topbar"><div class="muted">Bolão Expresso　/　<b id="crumb" style="color:#17283d">Início</b></div><div class="avatar">BE</div></header><div class="content">
+<section class="page active" id="p-inicio"><div class="welcome"><div><div class="eyebrow">BEM-VINDO AO BOLÃO</div><h1>Seu futebol começa aqui.</h1><p>Entre nos bolões, faça seus palpites e acompanhe a disputa.</p></div><button class="primary" onclick="go('boloes')">＋ Criar bolão</button></div>
+<div class="hero"><div><span class="tag">TEMPORADA DE FUTEBOL</span><h2>Junte a galera.<br>Mostre que você entende.</h2><p>Crie seu próprio bolão, convide seus amigos e dispute o topo do ranking.</p><button class="primary" onclick="go('boloes')">Começar agora →</button></div><div class="ball">⚽</div></div>
+<div class="sectionhead"><h3>Visão geral</h3><span class="pill">SUA CONTA</span></div><div class="stats"><div class="stat"><label>Bolões ativos</label><strong>0</strong><small>Você ainda não participa de bolões</small></div><div class="stat"><label>Palpites enviados</label><strong>0</strong><small>Seus palpites aparecerão aqui</small></div><div class="stat"><label>Sua posição</label><strong>—</strong><small>Participe para entrar no ranking</small></div></div>
+<div class="sectionhead"><h3>Próximos jogos</h3><button class="link" onclick="go('jogos')">Ver todos →</button></div><div class="columns"><div class="panel"><div class="match"><div><div class="team"><span class="crest">FLA</span>Flamengo</div><div class="date">Demonstração · 19:00</div></div><div class="vs">VS</div><div><div class="team">Palmeiras<span class="crest">PAL</span></div><div class="date" style="text-align:right">Hoje</div></div></div><div class="match"><div><div class="team"><span class="crest">COR</span>Corinthians</div><div class="date">Demonstração · 21:30</div></div><div class="vs">VS</div><div><div class="team">São Paulo<span class="crest">SAO</span></div><div class="date" style="text-align:right">Amanhã</div></div></div></div><div class="panel"><h3 style="font-size:15px;margin:0 0 8px">Acesso rápido</h3><div class="quick"><b>Meus bolões</b><button onclick="go('boloes')">Abrir →</button></div><div class="quick"><b>Ranking</b><button onclick="go('ranking')">Abrir →</button></div><div class="quick"><b>Meu perfil</b><button onclick="go('perfil')">Abrir →</button></div></div></div><p class="muted" style="font-size:10px;margin-top:17px">Partidas e números são ilustrativos nesta prévia.</p></section>
+<section class="page" id="p-jogos"><div class="welcome"><div><div class="eyebrow">CENTRAL DE PARTIDAS</div><h1>Jogos</h1><p>Confira os confrontos e prepare seus palpites.</p></div></div><div class="placeholder"><h2>Partidas disponíveis</h2><p>Esta área será conectada à tabela real de jogos. Os confrontos da página inicial são exemplos visuais.</p></div></section>
+<section class="page" id="p-boloes"><div class="welcome"><div><div class="eyebrow">SUAS DISPUTAS</div><h1>Meus bolões</h1><p>Organize seus bolões ou participe de uma disputa.</p></div><button class="primary" onclick="alert('A criação de bolões será implementada na próxima etapa.')">＋ Criar bolão</button></div><div class="placeholder"><h2>Nenhum bolão por enquanto</h2><p>Quando você criar um bolão ou aceitar um convite, ele aparecerá aqui.</p></div></section>
+<section class="page" id="p-ranking"><div class="welcome"><div><div class="eyebrow">QUEM MANDA NOS PALPITES?</div><h1>Ranking</h1><p>Veja quem está liderando a disputa.</p></div></div><div class="placeholder"><h2>Ranking ainda sem participantes</h2><p>A classificação será calculada conforme os palpites forem pontuados.</p></div></section>
+<section class="page" id="p-perfil"><div class="welcome"><div><div class="eyebrow">SUA CONTA</div><h1>Meu perfil</h1><p>Gerencie suas informações pessoais.</p></div></div><div class="placeholder"><h2>Perfil de demonstração</h2><p>O cadastro com e-mail, senha e Google será conectado quando a autenticação estiver configurada.</p></div></section>
+</div></main></div>
+<nav class="mobile"><button class="active" data-page="inicio"><span>⌂</span>Início</button><button data-page="jogos"><span>⚽</span>Jogos</button><button data-page="boloes"><span>▣</span>Bolões</button><button data-page="ranking"><span>♛</span>Ranking</button><button data-page="perfil"><span>◉</span>Perfil</button></nav>
+<script>
+function go(page){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id==='p-'+page));document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));let n={inicio:'Início',jogos:'Jogos',boloes:'Meus bolões',ranking:'Ranking',perfil:'Meu perfil'};document.getElementById('crumb').textContent=n[page]||'Início';window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('[data-page]').forEach(x=>x.addEventListener('click',()=>go(x.dataset.page)));
+</script></body></html>
