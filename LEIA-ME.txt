@@ -1,11 +1,8 @@
-BOLÃO EXPRESSO — ATUALIZAÇÃO
+BOLÃO EXPRESSO — CORREÇÃO
 
-Arquivos para substituir no GitHub:
-1. app.js
-2. index.html
+1) No Supabase > SQL Editor, crie um New query, cole e execute o arquivo correcao-exclusao-supabase.sql.
+2) No GitHub, substitua os arquivos app.js e index.html pelos desta pasta.
+3) Substitua também sw.js pelo arquivo desta pasta (IMPORTANTE para corrigir o Ctrl+R).
+4) Publique/aguarde o GitHub Pages atualizar. Faça uma vez Ctrl+F5. Depois disso, Ctrl+R deve carregar a versão atual.
 
-No Supabase, execute o conteúdo de supabase-palpite-unico.sql uma única vez.
-
-A atualização faz: palpite imutável por participante/partida; desativa o service worker antigo para corrigir a atualização com Ctrl+R; mantém o painel de participantes e a exclusão administrativa de qualquer participante não administrador.
-
-Depois de publicar os arquivos, faça uma vez Ctrl+F5 (ou limpe/atualize o site no navegador). Isso permite que a nova página remova o cache antigo. Nas próximas atualizações, Ctrl+R deverá funcionar normalmente.
+A exclusão passa a usar a coluna is_removed, sem escrever 'removed' em profiles.role; assim não viola a restrição profiles_role_check. A conta fica bloqueada no app, os palpites são apagados e o administrador pode reativar o perfil. A conta do Supabase Auth não é apagada fisicamente.
