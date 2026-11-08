@@ -1,25 +1,23 @@
-# Bolão Expresso
+# Bolão Expresso — reconstrução
 
-Projeto web responsivo com interface em azul, branco e laranja.
-
-## Como abrir
+## Como executar
 1. Extraia o ZIP.
-2. Abra `index.html` no navegador para testar a interface.
-3. Para testar a instalação PWA e o modo offline, publique em um servidor HTTPS (por exemplo, GitHub Pages).
+2. Abra `index.html` no navegador ou publique os arquivos na raiz do GitHub Pages.
+3. O aplicativo salva dados de demonstração no armazenamento local do navegador.
 
-## Arquivos
-- `index.html`: estrutura das telas.
-- `styles.css`: identidade visual e layout responsivo.
-- `app.js`: navegação, criação local de bolões, palpites de demonstração e ranking.
-- `manifest.webmanifest`: metadados para instalação como aplicativo.
-- `sw.js`: cache básico para uso offline após primeira visita.
-
-## O que funciona nesta versão
-- Menu lateral no computador e navegação inferior no celular.
-- Telas Início, Jogos, Meus bolões, Ranking e Meu perfil.
-- Criação de bolões com privacidade e pontuação selecionáveis.
-- Salvamento local de bolões e palpites no navegador.
-- Edição do nome local do perfil.
+## Sistemas incluídos nesta versão
+- Menu responsivo e navegação entre páginas.
+- Criação e exclusão de bolões públicos e privados.
+- Regras personalizadas de pontuação por bolão.
+- Campo para premiação definida pelo organizador.
+- Cadastro manual de partidas.
+- Registro de palpites para o primeiro bolão da lista.
+- Cadastro de resultados e cálculo automático de pontos.
+- Ranking local, notificações, perfil editável e convites por link.
+- PWA e service worker com cache versionado.
 
 ## Limitações importantes
-Esta é uma versão de interface funcional local. Não possui cadastro real, login Google, banco de dados, sincronização entre dispositivos, convites por link, calendário oficial de partidas, resultados ao vivo, cálculo automático de pontuação ou pagamentos. Os times e rankings apresentados são dados fictícios de demonstração. Para uso real com vários participantes, será necessário conectar um backend e uma fonte confiável de partidas/resultados.
+Esta entrega é uma versão funcional local/front-end. Não possui ainda autenticação real por e-mail ou Google, banco de dados remoto, sincronização entre dispositivos/participantes, feed oficial de partidas, notificações push, nem validação segura de convites no servidor. Para isso será necessário configurar um backend (por exemplo, Supabase/Firebase) e credenciais próprias. Não insira senhas reais nesta versão.
+
+## Publicação no GitHub Pages
+Envie os arquivos `index.html`, `styles.css`, `app.js`, `sw.js` e `manifest.webmanifest` para a raiz do repositório. Depois aguarde o Pages publicar. Se o site ficar preso em uma versão anterior, feche o aplicativo instalado e faça uma atualização forçada (Ctrl+F5). O service worker usa cache versionado para evitar servir arquivos antigos.

@@ -3,6 +3,7 @@
   "short_name": "Bolão Expresso",
   "description": "Seus palpites, seus bolões.",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f5f7fb",
   "theme_color": "#102b5c",
