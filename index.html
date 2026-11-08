@@ -42,7 +42,7 @@
   <section id="page-admin" class="page">
     <div class="section-head"><div><span class="eyebrow">ÁREA RESTRITA</span><h1>Painel administrativo</h1><p class="muted">Você controla a publicação, os jogos, os resultados e o encerramento dos bolões.</p></div><span class="admin-chip">ADMINISTRAÇÃO</span></div>
     <div class="admin-layout">
-      <aside class="admin-menu"><button class="admin-tab active" data-tab="manage">Bolões</button><button class="admin-tab" data-tab="create">Criar bolão</button><button class="admin-tab" data-tab="matches">Partidas e resultados</button><button class="admin-tab" data-tab="data">Dados e integração</button></aside>
+      <aside class="admin-menu"><button class="admin-tab active" data-tab="manage">Bolões</button><button class="admin-tab" data-tab="create">Criar bolão</button><button class="admin-tab" data-tab="matches">Partidas e resultados</button><button class="admin-tab" data-tab="participants">Participantes</button><button class="admin-tab" data-tab="data">Dados e integração</button></aside>
       <div class="admin-content">
         <div id="admin-manage" class="admin-panel active"><div class="panel-head"><h2>Gerenciar bolões</h2><button class="btn btn-primary" onclick="adminTab('create')">＋ Novo bolão</button></div><div id="adminPoolList"></div></div>
         <div id="admin-create" class="admin-panel">
@@ -64,6 +64,7 @@
           </form>
         </div>
         <div id="admin-matches" class="admin-panel"><h2>Partidas e resultados</h2><p class="muted">Atualize o placar oficial. Ao registrar o resultado, os palpites serão pontuados automaticamente.</p><div id="allMatchesAdmin"></div></div>
+        <div id="admin-participants" class="admin-panel"><h2>Gerenciar participantes</h2><p class="muted">Exclua participantes que não devem mais participar. A conta será bloqueada no aplicativo e os palpites serão apagados. Você poderá reativá-la depois.</p><div id="adminParticipants"></div></div>
         <div id="admin-data" class="admin-panel"><h2>Dados e integração</h2><div class="notice"><b>Importante:</b> O Bolão Expresso usa Supabase para autenticação e sincronização. Configure as tabelas executando o arquivo supabase-setup.sql no SQL Editor do seu projeto. A API de futebol ainda será integrada em uma etapa separada.</div>
           <label class="file-label">Importar partidas de um arquivo JSON<input type="file" id="importMatches" accept=".json,application/json"></label>
           <p class="muted small">Formato: uma lista de partidas com competition, home, away, date e opcionalmente id. O arquivo pode ser exportado por uma integração/API externa.</p>
@@ -78,5 +79,5 @@
 <div id="toast" class="toast"></div>
 <footer>© 2026 Bolão Expresso <span>Futebol real • Bolões oficiais • Ranking</span></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 </body></html>
