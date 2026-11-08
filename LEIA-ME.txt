@@ -1,8 +1,12 @@
-BOLÃO EXPRESSO — CORREÇÃO
+BOLÃO EXPRESSO — LOGO AZUL, BRANCO E LARANJA
 
-1) No Supabase > SQL Editor, crie um New query, cole e execute o arquivo correcao-exclusao-supabase.sql.
-2) No GitHub, substitua os arquivos app.js e index.html pelos desta pasta.
-3) Substitua também sw.js pelo arquivo desta pasta (IMPORTANTE para corrigir o Ctrl+R).
-4) Publique/aguarde o GitHub Pages atualizar. Faça uma vez Ctrl+F5. Depois disso, Ctrl+R deve carregar a versão atual.
+Para adicionar a logo ao app no GitHub, envie/substitua estes arquivos na mesma pasta principal do site:
+- index.html
+- app.js
+- sw.js
+- logo-bolao-expresso.png
 
-A exclusão passa a usar a coluna is_removed, sem escrever 'removed' em profiles.role; assim não viola a restrição profiles_role_check. A conta fica bloqueada no app, os palpites são apagados e o administrador pode reativar o perfil. A conta do Supabase Auth não é apagada fisicamente.
+Mantenha também o styles.css e os demais arquivos que já existem no repositório. Não apague nem substitua o styles.css.
+
+A logo aparece no cabeçalho do aplicativo. O app.js e o sw.js foram incluídos na versão atual para manter o conjunto alinhado.
+Depois de publicar, abra o app e faça Ctrl+F5 uma vez para carregar a nova identidade.
