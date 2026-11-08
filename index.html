@@ -1,88 +1,45 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#102b5c">
-  <meta name="description" content="Bolão Expresso — seus palpites, seus bolões.">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css">
-  <title>Bolão Expresso</title>
-</head>
-<body>
-  <div class="app-shell">
-    <aside class="sidebar" id="sidebar">
-      <a class="brand" href="#" aria-label="Bolão Expresso - início" data-page="inicio">
-        <span class="brand-mark">BE</span><span><b>Bolão</b><strong>Expresso</strong></span>
-      </a>
-      <div class="side-label">MENU PRINCIPAL</div>
-      <nav class="side-nav" aria-label="Menu principal">
-        <button class="nav-item active" data-page="inicio"><span>⌂</span>Início</button>
-        <button class="nav-item" data-page="jogos"><span>⚽</span>Jogos</button>
-        <button class="nav-item" data-page="boloes"><span>▤</span>Meus bolões</button>
-        <button class="nav-item" data-page="ranking"><span>♜</span>Ranking</button>
-        <button class="nav-item" data-page="perfil"><span>◉</span>Meu perfil</button>
-      </nav>
-      <div class="sidebar-bottom">
-        <div class="help-card"><span class="help-icon">?</span><b>Precisa de ajuda?</b><small>Consulte as informações do aplicativo.</small></div>
-        <div class="sidebar-user"><div class="avatar">JG</div><div><b>Jogador</b><small>Conta de demonstração</small></div><span class="dots">•••</span></div>
-      </div>
-    </aside>
 
-    <main class="main-area">
-      <header class="topbar">
-        <button class="mobile-menu" id="mobileMenu" aria-label="Abrir menu">☰</button>
-        <div class="breadcrumb"><span>Bolão Expresso</span><i>/</i><b id="pageCrumb">Início</b></div>
-        <div class="top-actions"><span class="status-dot"></span><span class="online-label">Modo demonstração</span><button class="icon-button" title="Notificações">♧</button><div class="avatar small">JG</div></div>
-      </header>
+const CACHE_NAME = "bolao-expresso-v3";
+const APP_SHELL = [
+  "./",
+  "./index.html",
+  "./styles.css",
+  "./app.js",
+  "./manifest.webmanifest"
+];
 
-      <div class="page-wrap">
-        <section class="page active" id="page-inicio">
-          <div class="welcome-row"><div><p class="eyebrow">SUA CENTRAL DE PALPITES</p><h1>Bom jogo, <span>Jogador!</span></h1><p class="muted">Acompanhe seus jogos, palpites e bolões em um só lugar.</p></div><button class="primary-btn" data-action="new-pool">＋ Criar bolão</button></div>
-          <div class="hero-panel"><div class="hero-copy"><span class="hero-tag">BOLÃO EXPRESSO</span><h2>O jogo fica melhor<br>quando todo mundo participa.</h2><p>Crie seu bolão, convide seus amigos e dispute o topo do ranking.</p><button class="light-btn" data-page="boloes">Explorar meus bolões <span>→</span></button></div><div class="hero-ball">⚽</div><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div></div>
-          <div class="section-heading"><div><h2>Visão geral</h2><p class="muted">Resumo da sua atividade</p></div></div>
-          <div class="stats-grid">
-            <article class="stat-card"><div class="stat-top"><span>Bolões ativos</span><span class="stat-icon blue">▤</span></div><strong id="statPools">2</strong><small>Em andamento</small></article>
-            <article class="stat-card"><div class="stat-top"><span>Palpites enviados</span><span class="stat-icon orange">⚽</span></div><strong id="statPicks">8</strong><small>Nesta temporada</small></article>
-            <article class="stat-card"><div class="stat-top"><span>Pontos conquistados</span><span class="stat-icon green">↗</span></div><strong id="statPoints">124</strong><small>Somatório demonstrativo</small></article>
-            <article class="stat-card"><div class="stat-top"><span>Melhor posição</span><span class="stat-icon purple">♜</span></div><strong>3º</strong><small>Entre seus amigos</small></article>
-          </div>
-          <div class="content-grid">
-            <section class="panel"><div class="panel-heading"><div><h2>Próximos jogos</h2><p class="muted">Partidas de exemplo</p></div><button class="text-btn" data-page="jogos">Ver todos →</button></div><div id="homeMatches" class="match-list"></div></section>
-            <section class="panel"><div class="panel-heading"><div><h2>Acesso rápido</h2><p class="muted">Continue de onde parou</p></div></div><div class="quick-list"><button data-page="boloes"><span class="quick-icon blue">▤</span><span><b>Meus bolões</b><small>Gerencie suas competições</small></span><i>→</i></button><button data-page="ranking"><span class="quick-icon orange">♜</span><span><b>Ranking</b><small>Veja sua classificação</small></span><i>→</i></button><button data-action="new-pool"><span class="quick-icon green">＋</span><span><b>Criar bolão</b><small>Comece uma nova disputa</small></span><i>→</i></button></div></section>
-          </div>
-        </section>
+self.addEventListener("install", event => {
+  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL))
+  );
+});
 
-        <section class="page" id="page-jogos">
-          <div class="page-title-row"><div><p class="eyebrow">ACOMPANHE AS PARTIDAS</p><h1>Jogos</h1><p class="muted">Faça seus palpites para as partidas disponíveis.</p></div></div>
-          <div class="filter-row"><button class="filter-chip active">Todos os jogos</button><button class="filter-chip">Hoje</button><button class="filter-chip">Amanhã</button></div>
-          <div class="panel"><div class="panel-heading"><div><h2>Partidas disponíveis</h2><p class="muted">Confrontos fictícios para demonstração</p></div><span class="demo-label">DADOS DE EXEMPLO</span></div><div id="allMatches" class="match-list full"></div></div>
-        </section>
+self.addEventListener("activate", event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(
+      keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+    );
+    await self.clients.claim();
+  })());
+});
 
-        <section class="page" id="page-boloes">
-          <div class="page-title-row"><div><p class="eyebrow">SUAS COMPETIÇÕES</p><h1>Meus bolões</h1><p class="muted">Crie, organize e acompanhe seus bolões.</p></div><button class="primary-btn" data-action="new-pool">＋ Criar bolão</button></div>
-          <div class="pool-grid" id="poolGrid"></div>
-        </section>
+self.addEventListener("fetch", event => {
+  if (event.request.method !== "GET") return;
 
-        <section class="page" id="page-ranking">
-          <div class="page-title-row"><div><p class="eyebrow">DISPUTE O TOPO</p><h1>Ranking</h1><p class="muted">Classificação demonstrativa dos participantes.</p></div></div>
-          <div class="panel"><div class="panel-heading"><div><h2>Classificação geral</h2><p class="muted">Temporada de demonstração</p></div><span class="demo-label">EXEMPLO</span></div><div class="table-wrap"><table><thead><tr><th>Posição</th><th>Participante</th><th>Palpites</th><th>Pontos</th></tr></thead><tbody id="rankingRows"></tbody></table></div></div>
-        </section>
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
 
-        <section class="page" id="page-perfil">
-          <div class="page-title-row"><div><p class="eyebrow">SUA CONTA</p><h1>Meu perfil</h1><p class="muted">Informações da sua conta neste dispositivo.</p></div></div>
-          <div class="profile-panel panel"><div class="profile-avatar">JG</div><div class="profile-info"><h2>Jogador</h2><p class="muted">Perfil local de demonstração</p><span class="profile-pill">Participante</span></div><button class="outline-btn" id="editProfile">Editar nome</button></div>
-          <div class="panel profile-details"><h2>Informações do perfil</h2><div class="detail-row"><span>Nome</span><b id="profileName">Jogador</b></div><div class="detail-row"><span>Tipo de conta</span><b>Demonstração local</b></div><div class="detail-row"><span>Armazenamento</span><b>Neste navegador</b></div><p class="notice">Esta versão salva alguns dados localmente neste dispositivo. Cadastro real, login Google e sincronização entre usuários ainda precisam de um servidor.</p></div>
-        </section>
-      </div>
-      <footer class="footer">© 2026 Bolão Expresso <span>Feito para reunir os amigos em torno do futebol.</span></footer>
-    </main>
-  </div>
-
-  <nav class="mobile-nav" aria-label="Navegação móvel"><button class="active" data-page="inicio"><span>⌂</span>Início</button><button data-page="jogos"><span>⚽</span>Jogos</button><button data-page="boloes"><span>▤</span>Bolões</button><button data-page="ranking"><span>♜</span>Ranking</button><button data-page="perfil"><span>◉</span>Perfil</button></nav>
-
-  <div class="modal-backdrop" id="poolModal" aria-hidden="true"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><div><p class="eyebrow">NOVA COMPETIÇÃO</p><h2 id="modalTitle">Criar bolão</h2></div><button class="close-btn" data-action="close-modal" aria-label="Fechar">×</button></div><form id="poolForm"><label for="poolName">Nome do bolão</label><input id="poolName" name="poolName" placeholder="Ex.: Bolão da galera" required maxlength="50"><label for="poolDescription">Descrição <span>(opcional)</span></label><textarea id="poolDescription" name="poolDescription" placeholder="Conte um pouco sobre seu bolão..." rows="3"></textarea><label for="poolPrivacy">Privacidade</label><select id="poolPrivacy"><option value="Privado">Privado</option><option value="Público">Público</option></select><label for="poolScoring">Pontuação</label><select id="poolScoring"><option value="Personalizada">Personalizada</option><option value="Placar exato">Placar exato</option><option value="Resultado">Resultado (vitória/empate/derrota)</option></select><div class="modal-note">A premiação será organizada pelo criador do bolão. Esta demonstração não processa pagamentos.</div><div class="modal-actions"><button type="button" class="outline-btn" data-action="close-modal">Cancelar</button><button type="submit" class="primary-btn">Criar bolão</button></div></form></div></div>
-  <div class="toast" id="toast" role="status"></div>
-  <script src="app.js"></script>
-</body>
-</html>
+  event.respondWith(
+    fetch(event.request).then(response => {
+      if (response.ok) {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then(cache =>
+          cache.put(event.request, copy)
+        );
+      }
+      return response;
+    }).catch(() => caches.match(event.request))
+  );
+});
