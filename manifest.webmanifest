@@ -1,10 +1,10 @@
 {
   "name": "Bolão Expresso",
   "short_name": "Bolão Expresso",
+  "description": "Palpites e rankings oficiais de futebol",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#f5f7fb",
+  "background_color": "#f3f6fa",
   "theme_color": "#123c78",
-  "lang": "pt-BR",
-  "icons": []
+  "lang": "pt-BR"
 }
