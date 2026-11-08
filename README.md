@@ -1,28 +1,25 @@
 # Bolão Expresso
 
-Protótipo inicial de aplicativo web responsivo e instalável (PWA), com identidade visual minimalista em azul, branco e laranja.
+Projeto web responsivo com interface em azul, branco e laranja.
 
-## Como executar
-1. Extraia os arquivos.
-2. Abra `index.html` no navegador para uma prévia básica.
-3. Para testar a instalação PWA e o service worker, publique em HTTPS (por exemplo, GitHub Pages) ou use um servidor local.
+## Como abrir
+1. Extraia o ZIP.
+2. Abra `index.html` no navegador para testar a interface.
+3. Para testar a instalação PWA e o modo offline, publique em um servidor HTTPS (por exemplo, GitHub Pages).
 
-## Funcionalidades desta versão
-- Navegação entre Início, Jogos, Meus bolões, Ranking e Perfil.
-- Criação de bolões públicos ou privados.
-- Cadastro do prêmio oferecido pelo organizador.
-- Regras personalizadas de pontuação: placar exato, resultado 1X2 e gols de um time.
-- Registro demonstrativo de palpites no armazenamento local do navegador.
-- Layout responsivo para celular e computador.
+## Arquivos
+- `index.html`: estrutura das telas.
+- `styles.css`: identidade visual e layout responsivo.
+- `app.js`: navegação, criação local de bolões, palpites de demonstração e ranking.
+- `manifest.webmanifest`: metadados para instalação como aplicativo.
+- `sw.js`: cache básico para uso offline após primeira visita.
+
+## O que funciona nesta versão
+- Menu lateral no computador e navegação inferior no celular.
+- Telas Início, Jogos, Meus bolões, Ranking e Meu perfil.
+- Criação de bolões com privacidade e pontuação selecionáveis.
+- Salvamento local de bolões e palpites no navegador.
+- Edição do nome local do perfil.
 
 ## Limitações importantes
-Esta é uma demonstração front-end. Não há contas reais, sincronização entre usuários, banco de dados, resultados ao vivo, pagamentos ou confirmação de prêmios. As partidas exibidas são dados fictícios/de demonstração, não calendário oficial. Não use este protótipo para administrar prêmios reais.
-
-## Próximas etapas
-1. Criar repositório GitHub e publicar a versão inicial.
-2. Implementar backend e banco de dados.
-3. Implementar autenticação segura por e-mail e Google.
-4. Criar convites, participantes e permissões de organizador.
-5. Conectar calendário/resultados de futebol confiáveis.
-6. Implementar cálculo de pontuação, auditoria e classificação.
-7. Avaliar regras legais e termos de uso relativos a premiações.
+Esta é uma versão de interface funcional local. Não possui cadastro real, login Google, banco de dados, sincronização entre dispositivos, convites por link, calendário oficial de partidas, resultados ao vivo, cálculo automático de pontuação ou pagamentos. Os times e rankings apresentados são dados fictícios de demonstração. Para uso real com vários participantes, será necessário conectar um backend e uma fonte confiável de partidas/resultados.

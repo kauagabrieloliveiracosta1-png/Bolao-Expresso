@@ -1,9 +1,10 @@
 {
   "name": "Bolão Expresso",
   "short_name": "Bolão Expresso",
-  "start_url": "./",
+  "description": "Seus palpites, seus bolões.",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#061510",
-  "theme_color": "#071b16",
-  "description": "Palpites e bolões de futebol"
+  "background_color": "#f5f7fb",
+  "theme_color": "#102b5c",
+  "lang": "pt-BR"
 }
