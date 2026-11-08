@@ -1,7 +1,7 @@
 const $=id=>document.getElementById(id);
 const COMPETITIONS=["Brasileirão Série A","Brasileirão Série B","Copa do Brasil","Copa Libertadores","Copa Sul-Americana","Premier League","La Liga","Serie A (Itália)","Bundesliga","Ligue 1","Champions League","Europa League","Conference League","MLS","Liga MX","Liga Portugal","Eredivisie","Saudi Pro League","Seleções — amistosos","UEFA Nations League","Eliminatórias da Copa","Outras competições"];
 const SUPABASE_URL="https://osnyvlbrozozpobvfxlb.supabase.co";
-const SUPABASE_KEY="sb_publishable_YSsP4Y0zPzesYIRcaLMYyQ_BoBJ4cNK";
+const SUPABASE_KEY="sb_publishable_hXV5OmEypXtbOyuCe-0YXg_07VThSfA";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const demo={pools:[],users:[],predictions:{},admin:false,currentUserId:null,currentProfile:null};
 let state={...demo}; let cloudReady=false; let syncing=false;
