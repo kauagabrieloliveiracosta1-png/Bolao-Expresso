@@ -4,12 +4,15 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#123c78"><meta name="description" content="Bolão Expresso — palpites e rankings oficiais">
 <link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css">
+<style>
+.community-list{display:grid;gap:18px}.community-pool{padding:20px}.community-match{padding:15px 0;border-top:1px solid #d9e0e9}.community-match h3{margin:0 0 10px;font-size:1rem}.community-match h3 span{color:#e58a24;margin:0 5px}.community-picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}.community-pick{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;background:rgba(18,60,120,.07)}.community-pick b{white-space:nowrap}.community-pool .panel-head{align-items:flex-start}
+</style>
 <title>Bolão Expresso</title>
 </head>
 <body>
 <header class="topbar">
   <a class="brand" href="#" onclick="showPage('home');return false"><span class="brand-mark">BE</span><span>Bolão <b>Expresso</b></span></a>
-  <nav class="topnav"><button class="navbtn active" data-page="home">Início</button><button class="navbtn" data-page="pools">Bolões</button><button class="navbtn" data-page="ranking">Ranking</button><button class="navbtn" data-page="history">Histórico</button></nav>
+  <nav class="topnav"><button class="navbtn active" data-page="home">Início</button><button class="navbtn" data-page="pools">Bolões</button><button class="navbtn" data-page="ranking">Ranking</button><button class="navbtn" data-page="community">Palpites da Galera</button><button class="navbtn" data-page="history">Histórico</button></nav>
   <div class="top-actions"><span id="roleLabel" class="role-label">Visitante</span><button class="btn btn-outline" id="loginBtn" onclick="openAuth('login')">Entrar</button><button class="btn btn-primary" id="signupBtn" onclick="openAuth('register')">Criar conta</button><button class="btn btn-outline" id="logoutBtn" style="display:none" onclick="logout()">Sair</button><button class="btn btn-outline" id="roleToggle" style="display:none">Painel admin</button></div>
 </header>
 <main class="container">
@@ -27,6 +30,10 @@
   <section id="page-ranking" class="page">
     <div class="section-head"><div><span class="eyebrow">CLASSIFICAÇÃO</span><h1>Ranking geral</h1><p class="muted">Pontuação acumulada nos bolões oficiais.</p></div></div>
     <div class="panel"><div class="table-wrap"><table><thead><tr><th>#</th><th>Participante</th><th>Bolões</th><th>Pontos</th></tr></thead><tbody id="rankingRows"></tbody></table></div></div>
+  </section>
+  <section id="page-community" class="page">
+    <div class="section-head"><div><span class="eyebrow">TRANSPARÊNCIA</span><h1>Palpites da Galera</h1><p class="muted">Confira seus palpites a qualquer momento. Os palpites dos outros participantes só serão revelados depois que o resultado oficial de cada partida for registrado.</p></div><button class="btn btn-outline" onclick="refreshCommunityPredictions()">Atualizar</button></div>
+    <div id="communityPredictions" class="community-list"><div class="panel muted">Entre na sua conta para consultar seus palpites. Os palpites dos demais serão liberados após o resultado final de cada partida.</div></div>
   </section>
   <section id="page-history" class="page">
     <div class="section-head"><div><span class="eyebrow">MEMÓRIA DA DISPUTA</span><h1>Histórico de bolões</h1><p class="muted">Resultados, vencedores e pontuações dos bolões encerrados.</p></div></div>
