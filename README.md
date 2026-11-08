@@ -1,43 +1,40 @@
-# Bolão Expresso — Bolões oficiais (protótipo funcional)
+# Bolão Expresso V4 — Supabase
 
-## O que foi implementado
-- Somente a administração publica bolões. Não existe botão para usuário criar bolão.
-- Painel administrativo com criação, edição, publicação, mudança de status e encerramento.
-- Seleção de competições conhecidas, etapa/rodada, prazo, descrição de premiação e pontuação.
-- Cadastro de partidas e importação de uma lista JSON de partidas para o formulário.
-- Participantes fazem palpites; placares são inseridos pelo administrador.
-- Pontuação automática por placar exato ou resultado (vitória/empate/derrota).
-- Ranking e histórico dos bolões encerrados.
-- Backup JSON e PWA responsiva para PC/celular.
+## O que esta versão conecta
+- Cadastro e login por e-mail e senha via Supabase Auth.
+- Recuperação de senha por e-mail.
+- Perfis e ranking compartilhados.
+- Bolões publicados armazenados no banco.
+- Palpites individuais sincronizados por conta.
+- Acesso administrativo controlado pelo campo `profiles.role` e por Row Level Security (RLS).
 
-## Como testar
-1. Extraia o ZIP.
-2. Abra `index.html` no navegador ou publique os arquivos no GitHub Pages.
-3. Clique em **Painel admin** para alternar para o painel administrativo.
-4. Em **Criar bolão**, selecione competição, prazo, regra de pontuação e adicione partidas.
-5. Publique. Volte para **Bolões** para testar os palpites.
-6. No painel admin, abra **Partidas e resultados**, informe os placares oficiais e encerre o bolão em **Bolões**.
+## Configuração obrigatória do banco
+1. Abra o projeto Supabase do Bolão Expresso.
+2. Entre em **SQL Editor** e crie uma consulta.
+3. Copie todo o conteúdo de `supabase-setup.sql`, cole e execute.
+4. Publique estes arquivos no GitHub Pages (substitua os arquivos da versão anterior).
+5. Cadastre sua conta pelo aplicativo e confirme o e-mail.
+6. No SQL Editor, execute a instrução abaixo, trocando pelo e-mail usado no cadastro:
 
-## Limitações que precisam ficar claras
-Esta versão é um protótipo front-end: dados ficam no `localStorage` do navegador. O modo administrador é apenas uma chave de interface, NÃO é login seguro. Não há contas reais, banco de dados, sincronização entre usuários/dispositivos ou pagamentos.
-A lista de competições é um catálogo de opções, não um feed de calendário. A importação JSON facilita trazer jogos reais de uma API, mas não consulta uma API por conta própria. Resultados precisam ser informados pelo administrador até a integração real.
-
-## Próxima etapa para produção
-- Backend com autenticação e permissões reais (admin/participante), banco de dados e API segura.
-- Integração com provedor de futebol para competições, calendário, jogos ao vivo e resultados.
-- Chave da API mantida no servidor, nunca no JavaScript público.
-- Persistência centralizada para que todos vejam o mesmo bolão e ranking.
-- Política de privacidade, regras do bolão e controles contra alteração de palpites após o prazo.
-
-## Formato de importação de partidas
-```json
-[
-  {
-    "competition": "Brasileirão Série A",
-    "home": "Clube mandante",
-    "away": "Clube visitante",
-    "date": "2026-11-08T16:00:00Z"
-  }
-]
+```sql
+update public.profiles
+set role = 'admin'
+where id = (select id from auth.users where email = 'SEU_EMAIL');
 ```
-Os nomes acima são apenas exemplo de estrutura, não partidas anunciadas.
+
+7. Saia e entre novamente no aplicativo. O botão **Painel admin** aparecerá para a conta promovida.
+
+## Credenciais
+A URL e a chave `sb_publishable_` fornecidas pelo proprietário foram configuradas em `app.js`. Publishable key é própria para cliente/browser; nunca coloque `service_role` ou `sb_secret_` no front-end.
+
+## Limitações conhecidas desta etapa
+- O primeiro administrador precisa ser promovido manualmente pelo SQL Editor, como descrito acima.
+- O app ainda não importa calendário nem placares reais automaticamente; isso exige integração posterior com uma API esportiva e um backend seguro para guardar a chave dessa API.
+- A pontuação é calculada no fechamento do bolão pelo administrador.
+- O banco guarda bolões em um documento JSON compartilhado e palpites em linhas individuais.
+- Configure em **Authentication → URL Configuration** a URL publicada do GitHub Pages como Site URL e Redirect URL para recuperação de senha.
+- Para segurança adicional, configure CAPTCHA/rate limits e políticas de confirmação de e-mail no painel Supabase antes de abrir ao público.
+
+## Arquivos
+- `index.html`, `styles.css`, `app.js`, `sw.js`, `manifest.webmanifest`
+- `supabase-setup.sql` — estrutura do banco e políticas RLS

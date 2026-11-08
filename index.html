@@ -10,7 +10,7 @@
 <header class="topbar">
   <a class="brand" href="#" onclick="showPage('home');return false"><span class="brand-mark">BE</span><span>Bolão <b>Expresso</b></span></a>
   <nav class="topnav"><button class="navbtn active" data-page="home">Início</button><button class="navbtn" data-page="pools">Bolões</button><button class="navbtn" data-page="ranking">Ranking</button><button class="navbtn" data-page="history">Histórico</button></nav>
-  <div class="top-actions"><span id="roleLabel" class="role-label">Participante</span><button class="btn btn-outline" id="roleToggle">Painel admin</button></div>
+  <div class="top-actions"><span id="roleLabel" class="role-label">Visitante</span><button class="btn btn-outline" id="loginBtn" onclick="openAuth('login')">Entrar</button><button class="btn btn-primary" id="signupBtn" onclick="openAuth('register')">Criar conta</button><button class="btn btn-outline" id="logoutBtn" style="display:none" onclick="logout()">Sair</button><button class="btn btn-outline" id="roleToggle" style="display:none">Painel admin</button></div>
 </header>
 <main class="container">
   <section id="page-home" class="page active">
@@ -57,7 +57,7 @@
           </form>
         </div>
         <div id="admin-matches" class="admin-panel"><h2>Partidas e resultados</h2><p class="muted">Atualize o placar oficial. Ao registrar o resultado, os palpites serão pontuados automaticamente.</p><div id="allMatchesAdmin"></div></div>
-        <div id="admin-data" class="admin-panel"><h2>Dados e integração</h2><div class="notice"><b>Importante:</b> este pacote já gerencia bolões e palpites no navegador. Para buscar calendário e placares automaticamente e compartilhar dados entre celulares/PCs, é necessário conectar uma API de futebol e um backend com banco de dados. Não existe chave de API embutida neste projeto.</div>
+        <div id="admin-data" class="admin-panel"><h2>Dados e integração</h2><div class="notice"><b>Importante:</b> O Bolão Expresso usa Supabase para autenticação e sincronização. Configure as tabelas executando o arquivo supabase-setup.sql no SQL Editor do seu projeto. A API de futebol ainda será integrada em uma etapa separada.</div>
           <label class="file-label">Importar partidas de um arquivo JSON<input type="file" id="importMatches" accept=".json,application/json"></label>
           <p class="muted small">Formato: uma lista de partidas com competition, home, away, date e opcionalmente id. O arquivo pode ser exportado por uma integração/API externa.</p>
           <button class="btn btn-outline" onclick="exportData()">Exportar backup completo</button> <button class="btn btn-danger" onclick="resetDemo()">Restaurar dados de demonstração</button>
@@ -70,5 +70,6 @@
 <div id="modal" class="modal"><div class="modal-card"><button class="modal-close" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
 <div id="toast" class="toast"></div>
 <footer>© 2026 Bolão Expresso <span>Futebol real • Bolões oficiais • Ranking</span></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
 </body></html>
