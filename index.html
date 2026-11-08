@@ -64,7 +64,7 @@
           </form>
         </div>
         <div id="admin-matches" class="admin-panel"><h2>Partidas e resultados</h2><p class="muted">Atualize o placar oficial. Ao registrar o resultado, os palpites serão pontuados automaticamente.</p><div id="allMatchesAdmin"></div></div>
-        <div id="admin-participants" class="admin-panel"><h2>Gerenciar participantes</h2><p class="muted">Exclua participantes que não devem mais participar. A conta será bloqueada no aplicativo e os palpites serão apagados. Você poderá reativá-la depois.</p><div id="adminParticipants"></div></div>
+        <div id="admin-participants" class="admin-panel"><h2>Gerenciar participantes</h2><p class="muted">O administrador pode excluir qualquer participante a qualquer momento. A conta será bloqueada no aplicativo e os palpites serão apagados. Administradores são protegidos; contas removidas podem ser reativadas.</p><div id="adminParticipants"></div></div>
         <div id="admin-data" class="admin-panel"><h2>Dados e integração</h2><div class="notice"><b>Importante:</b> O Bolão Expresso usa Supabase para autenticação e sincronização. Configure as tabelas executando o arquivo supabase-setup.sql no SQL Editor do seu projeto. A API de futebol ainda será integrada em uma etapa separada.</div>
           <label class="file-label">Importar partidas de um arquivo JSON<input type="file" id="importMatches" accept=".json,application/json"></label>
           <p class="muted small">Formato: uma lista de partidas com competition, home, away, date e opcionalmente id. O arquivo pode ser exportado por uma integração/API externa.</p>
@@ -79,5 +79,5 @@
 <div id="toast" class="toast"></div>
 <footer>© 2026 Bolão Expresso <span>Futebol real • Bolões oficiais • Ranking</span></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js?v=4"></script>
+<script src="app.js?v=5"></script>
 </body></html>
