@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123c78">
+<title>Central de Jogos | Bolão Expresso</title>
+<style>
+:root{--navy:#102b50;--blue:#174b86;--orange:#f39a28;--ink:#17263b;--muted:#718096;--line:#e4eaf1;--bg:#f3f6fa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px Arial,sans-serif}
+header{background:#fff;border-bottom:1px solid var(--line);padding:16px max(18px,calc((100% - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-size:19px;font-weight:800;color:var(--navy)}a.back{color:var(--blue);text-decoration:none;font-weight:700;font-size:13px}
+main{max-width:1100px;margin:auto;padding:28px 18px 50px}
+h1{font-size:28px;color:var(--navy);margin:0 0 6px}.sub{color:var(--muted);margin:0 0 20px;font-size:13px}
+.toolbar,.game{background:white;border:1px solid var(--line);border-radius:13px;box-shadow:0 5px 18px #1d3b5d08}
+.toolbar{padding:15px;display:flex;gap:10px;align-items:end;flex-wrap:wrap}
+button,select,input{font:600 13px Arial}button{border:1px solid transparent;border-radius:8px;padding:11px 15px;cursor:pointer;background:var(--blue);color:white}
+button.secondary{background:white;color:var(--blue);border-color:#d9e1eb}
+label{display:flex;flex-direction:column;gap:5px;font-size:11px;color:var(--muted);font-weight:700}
+input,select{border:1px solid #dce4ed;border-radius:8px;padding:10px;background:white;color:var(--ink)}
+.status{font-size:12px;color:var(--muted);margin:15px 2px}
+.games{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.game{padding:14px}.league{display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--line);padding-bottom:10px;color:var(--muted);font-size:10px;font-weight:700}
+.league img{width:20px;height:20px;object-fit:contain}.state{margin-left:auto;border-radius:20px;padding:4px 8px;background:#edf2f7;color:#617087;white-space:nowrap}.live{background:#fff0f0;color:#c03939}
+.teams{display:grid;grid-template-columns:minmax(0,1fr) 75px minmax(0,1fr);gap:8px;align-items:center;padding-top:13px}
+.team{display:flex;align-items:center;gap:8px;min-width:0;font-size:12px}.team img{width:28px;height:28px;object-fit:contain;flex:none}.team b{overflow-wrap:anywhere}.away{justify-content:flex-end;text-align:right}
+.score{text-align:center}.score strong{display:block;font-size:19px;color:var(--navy)}.score small{display:block;color:var(--muted);font-size:9px;margin-top:3px}
+.empty{background:#fff;border:1px solid var(--line);border-radius:12px;padding:25px;text-align:center;color:var(--muted);grid-column:1/-1}
+.note{font-size:10px;color:var(--muted);margin-top:14px}
+@media(max-width:650px){.games{grid-template-columns:1fr}.toolbar>*{flex:1}.toolbar button{min-width:30%}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<header><div class="brand">⚽ Bolão Expresso</div><a class="back" href="./">← Voltar ao aplicativo</a></header>
+<main>
+<h1>Central de Jogos</h1>
+<p class="sub">Acompanhe partidas reais das competições disponíveis no Bolão Expresso.</p>
+<div class="toolbar">
+<button id="today" onclick="setMode('today')">Hoje</button>
+<button id="live" class="secondary" onclick="setMode('live')">🔴 Ao vivo</button>
+<label>Escolher data <input id="date" type="date"></label>
+<label style="flex:1;min-width:180px">Competição <select id="competition" onchange="render()"><option value="all">Todas as competições</option></select></label>
+<button class="secondary" onclick="load(true)">↻ Atualizar</button>
+</div>
+<div class="status" id="status">Preparando Central de Jogos…</div>
+<div class="games" id="games"></div>
+<p class="note">Dados fornecidos pela API-Football. A atualização e a cobertura das competições dependem do plano gratuito e da disponibilidade da API.</p>
+</main>
+<script>
+const SUPABASE_URL="https://osnyvlbrozozpobvfxlb.supabase.co";
+const SUPABASE_KEY="sb_publishable_hXV5OmEypXtbOyuCe-0YXg_07VThSfA";
+const ENDPOINT=SUPABASE_URL+"/functions/v1/football-api";
+let mode="today",cache=null;
+const $=id=>document.getElementById(id);
+function isoToday(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function safe(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function competitionName(l){
+ const n=(l?.name||"").toLowerCase(),c=(l?.country||"").toLowerCase();
+ if(n.includes("brasileir")&&n.includes("serie a")||(n==="serie a"&&c==="brazil"))return "Brasileirão Série A";
+ if(n.includes("brasileir")&&n.includes("serie b")||(n==="serie b"&&c==="brazil"))return "Brasileirão Série B";
+ if(n.includes("copa do brasil"))return "Copa do Brasil";
+ if(n.includes("libertadores"))return "Copa Libertadores";
+ if(n.includes("sudamericana")||n.includes("sul-americana"))return "Copa Sul-Americana";
+ if(n==="premier league")return "Premier League";
+ if(n==="laliga"||n==="la liga")return "La Liga";
+ if(n==="serie a"&&c.includes("ital"))return "Serie A (Itália)";
+ if(n==="bundesliga")return "Bundesliga";
+ if(n==="ligue 1")return "Ligue 1";
+ if(n.includes("champions league")&&c.includes("europe"))return "Champions League";
+ if(n.includes("europa league"))return "Europa League";
+ if(n.includes("conference league"))return "Conference League";
+ if(n==="mls")return "MLS";
+ if(n.includes("liga mx"))return "Liga MX";
+ if(n.includes("primeira liga")||n==="liga portugal")return "Liga Portugal";
+ if(n==="eredivisie")return "Eredivisie";
+ if(n.includes("saudi pro league"))return "Saudi Pro League";
+ if(n.includes("friendlies")||n.includes("amistoso"))return "Seleções — amistosos";
+ if(n.includes("nations league"))return "UEFA Nations League";
+ if(n.includes("qualification")||n.includes("qualifiers")||n.includes("eliminatorias"))return "Eliminatórias da Copa";
+ return "Outras competições";
+}
+function statusOf(f){const s=f.fixture?.status||{},v=s.short||"";
+ if(["1H","2H","HT","ET","BT","P","LIVE"].includes(v))return {name:v==="HT"?"Intervalo":v==="ET"?"Prorrogação":v==="P"?"Pênaltis":"Ao vivo",live:true};
+ if(["FT","AET","PEN"].includes(v))return {name:v==="AET"?"Fim (prorrogação)":v==="PEN"?"Fim (pênaltis)":"Encerrado",live:false};
+ return {name:"Agendado",live:false};
+}
+function render(){
+ const selected=$("competition").value,rows=(cache?.rows||[]).filter(x=>selected==="all"||competitionName(x.league)===selected);
+ if(!rows.length){$("games").innerHTML='<div class="empty">Nenhuma partida encontrada para este filtro e período.</div>';return}
+ $("games").innerHTML=rows.map(x=>{
+  const s=statusOf(x),h=x.teams?.home||{},a=x.teams?.away||{},g=x.goals||{},d=x.fixture?.date?new Date(x.fixture.date):null;
+  const day=d?d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",timeZone:"America/Sao_Paulo"}):"";
+  const time=d?d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",timeZone:"America/Sao_Paulo"}):"--:--";
+  const score=s.name==="Agendado"?"—":(g.home??0)+" × "+(g.away??0);
+  return '<article class="game"><div class="league"><img src="'+safe(x.league?.logo||"")+'" onerror="this.style.display=\'none\'"><span>'+safe(x.league?.name||"Competição")+' · '+safe(x.league?.country||"")+'</span><span class="state '+(s.live?"live":"")+'">'+safe(s.name)+'</span></div><div class="teams"><div class="team"><img src="'+safe(h.logo||"")+'" onerror="this.style.display=\'none\'"><b>'+safe(h.name||"Mandante")+'</b></div><div class="score"><strong>'+score+'</strong><small>'+day+' · '+time+'</small></div><div class="team away"><img src="'+safe(a.logo||"")+'" onerror="this.style.display=\'none\'"><b>'+safe(a.name||"Visitante")+'</b></div></div></article>';
+ }).join("");
+}
+function setMode(next){mode=next;$("today").className=mode==="today"?"":"secondary";$("live").className=mode==="live"?"":"secondary";$("date").disabled=mode==="live";load(true)}
+async function load(force=false){
+ const date=$("date").value||isoToday(),key=mode+":"+date;
+ $("status").textContent="Buscando partidas…";$("games").innerHTML='<div class="empty">Carregando…</div>';
+ if(!force&&cache?.key===key&&Date.now()-cache.time<240000){$("status").textContent=cache.rows.length+" partidas · dados recentes";render();return}
+ try{
+  const p=new URLSearchParams({endpoint:"fixtures",timezone:"America/Sao_Paulo"});
+  if(mode==="live")p.set("live","all");else p.set("date",date);
+  const r=await fetch(ENDPOINT+"?"+p.toString(),{headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY}});
+  const data=await r.json();
+  if(!r.ok)throw Error("Erro HTTP "+r.status);
+  if(data.errors&&Object.keys(data.errors).length)throw Error(JSON.stringify(data.errors));
+  const rows=Array.isArray(data.response)?data.response:[];
+  cache={key,time:Date.now(),rows};
+  const options=[...new Set(rows.map(x=>competitionName(x.league)))].sort();
+  $("competition").innerHTML='<option value="all">Todas as competições</option>'+options.map(x=>'<option value="'+safe(x)+'">'+safe(x)+'</option>').join("");
+  $("status").textContent=rows.length+" partidas encontradas";
+  render();
+ }catch(e){$("status").textContent="Não foi possível carregar os jogos: "+e.message;$("games").innerHTML='<div class="empty">Confira a Edge Function football-api no Supabase e tente novamente.</div>'}
+}
+$("date").value=isoToday();load();
+</script>
+</body>
+</html>
